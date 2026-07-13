@@ -15,6 +15,13 @@ name: OpenWrt Builder
 on:
   repository_dispatch:
   workflow_dispatch:
+    inputs:
+      enable_ssh:
+        description: 'Enable SSH debugging connection'
+        required: false
+        default: false
+        type: boolean
+  # schedule: ...
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
