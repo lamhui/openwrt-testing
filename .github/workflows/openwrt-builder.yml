@@ -1,13 +1,13 @@
 name: Build ImmortalWrt for K2P
 
 on:
+  repository_dispatch:
   workflow_dispatch:
     inputs:
-      enable_ssh:
-        description: 'Enable SSH debugging connection (for make menuconfig)'
+      ssh:
+        description: 'SSH connection to Actions'
         required: false
-        default: false
-        type: boolean
+        default: 'false'
   # schedule:
   #   - cron: '0 20 * * 0'
 
@@ -56,6 +56,13 @@ jobs:
           chmod +x ${{ env.DIY_PART2 }}
           ${{ env.DIY_PART2 }} $HOME/openwrt
 
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
       - name: Install feeds
         run: |
           cd $HOME/openwrt
@@ -69,13 +76,6 @@ jobs:
         run: |
           cd $HOME/openwrt
           make defconfig
-
-      # ---- 新增 SSH 调试步骤（在编译前启动，可手动执行 make menuconfig） ----
-      - name: Setup SSH (Pre-build menuconfig)
-        if: github.event.inputs.enable_ssh == 'true'
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
 
       - name: Build firmware
         run: |
