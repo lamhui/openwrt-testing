@@ -15,8 +15,8 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   CONFIG_FILE: .config
-  DIY_PART1: diy-part1.sh
-  DIY_PART2: diy-part2.sh
+  DIY_PART1: scripts/diy-part1.sh
+  DIY_PART2: scripts/diy-part2.sh
   TZ: Asia/Shanghai
 
 jobs:
